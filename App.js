@@ -5,6 +5,7 @@ import AppHeader from './components/AppHeader';
 import Copyright from './components/Copyright';
 import ProductItem from './components/ProductItem';
 import ScanButton from './components/ScanButton';
+import Demo from './Pages/Demo';
 
 const ITEMS = [
   {
@@ -41,6 +42,10 @@ export default function App() {
       <ProductItem item={item} onPress={onItemPress}/> 
     )
   };
+
+  return (
+    <Demo/>
+  )
 
   return (
     <View style={styles.container}>
