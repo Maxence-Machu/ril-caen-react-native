@@ -1,38 +1,61 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, Button, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, FlatList, ScrollView, Button, Alert, TouchableOpacity } from 'react-native';
+import AppHeader from './components/AppHeader';
 import Copyright from './components/Copyright';
+import ProductItem from './components/ProductItem';
+import ScanButton from './components/ScanButton';
 
+const ITEMS = [
+  {
+    id: '1',
+    name: 'Chocapic',
+    date: '21/01/2021'
+  },{
+    id: '2',
+    name: 'CocoPops',
+    date: '22/01/2021'
+  },{
+    id: '3',
+    name: 'Golden Grams',
+    date: '23/01/2021'
+  }
+]
 export default function App() {
 
-  function onPressLearnMore () {
+  function onPressLearnMore() {
     Alert.alert('Bonjour')
   }
+
+  /*
+  La variable item est envoyée depuis ProductItem.js
+  */
+  function onItemPress(item){
+    //console.log(item);
+    //alert('Je clique sur ' + item.name);
+    alert(`Je clique sur ${item.name}`);
+  }
  
+  const renderItem = ({ item }) => {    
+    return (
+      <ProductItem item={item} onPress={onItemPress}/> 
+    )
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <View style={sHeader.container}>
-        <Text style={sHeader.text}>Yoki</Text>
-      </View>
+      <AppHeader title="Accueil" />
 
-      <View style={sButton.container}>
-        <TouchableOpacity onPress={onPressLearnMore}>
-          <View style={sButton.button}>
-              <Text style={sButton.text}>Scanner</Text>
-          </View> 
-        </TouchableOpacity>
-      </View>
+      <ScanButton text="Bouton" onPress={onPressLearnMore}/>
 
-      <ScrollView style={sScroll.container}>
-        <TouchableOpacity onPress={() => Alert.alert("Hello World")}>
-          <View style={sScrollItem.container}>
-            <Text style={sScrollItem.title}>Chocapic fort en chocolat</Text>
-            <Text style={sScrollItem.subtitle}>Scanné hier à 18h</Text>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+
+      <FlatList
+        data={ITEMS}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
 
       <Copyright 
           /* Ne pas oublier les accolades pour du JS comme un tableau */
@@ -46,53 +69,8 @@ export default function App() {
 }
 
 
-const sScrollItem = StyleSheet.create({
-    container: {
-      paddingLeft: 40,
-      paddingVertical: 20,
-      borderBottomColor: 'grey',
-      borderBottomWidth: 1
-    },
-    subtitle : {
-      fontSize: 18
-    },
-    title : {
-      fontSize: 26
-    }
-});
-const sButton = StyleSheet.create({
-  container: {
-    paddingHorizontal: 40,
-    paddingVertical: 20
-  },
-  button: {
-    backgroundColor: 'grey',
-    paddingHorizontal: 40,
-    paddingVertical: 20
-  },
-  text : {
-    textAlign: 'center',
-    fontSize: 24,
-    textTransform: 'uppercase'
-  }
-})
-
 const sScroll = StyleSheet.create({
   container: {
-  }
-})
-const sHeader = StyleSheet.create({
-  text : {
-    fontSize: 24, 
-    textAlign: 'center',
-    fontWeight: 'bold'
-  },
-  container: {
-    backgroundColor: 'lightgrey',
-    paddingTop: 45,
-    paddingBottom: 10,
-    borderBottomColor: 'grey',
-    borderBottomWidth: 1
   }
 })
 const styles = StyleSheet.create({
