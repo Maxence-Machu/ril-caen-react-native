@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput,  Button, Image } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, TextInput,  Button, Image, Alert } from 'react-native';
 import AppHeader from '../components/AppHeader';
 import { StatusBar } from 'expo-status-bar';
 
@@ -9,6 +9,56 @@ export default function Demo(){
 
     const [keyword, setKeyword] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+
+    const [taille, setTaille] = useState(0);
+    const [poids, setPoids] = useState(0);
+    const [IMC, setIMC] = useState(0);
+
+    /*
+    Exécuter une fonction à la mise à jour du composant
+    */
+   /*
+   useEffect(() => {
+       Alert.alert('Je me met à jour')
+   })*/
+
+    /*
+    Exécuter une fonction au chargement du composant
+    */
+   useEffect(() => {
+       //Alert.alert('Je charge')
+   }, [])
+
+    /*
+    Exécuter une fonction à la modification de "taille"
+    */
+   useEffect(() => {
+       //Alert.alert('Je met à jour taille')
+   }, [taille])
+
+    /*
+    Exécuter une fonction à la modification de "poids"
+    */
+   useEffect(() => {
+       //Alert.alert('Je met à jour poids')
+   }, [poids])
+
+    /*
+    Exécuter une fonction à la modification de "poids" + "taille"
+    */
+   useEffect(() => {
+       //Alert.alert('Je met à jour poids ou taille');
+        console.log(poids, taille)
+        if(poids !== 0 && taille !== 0){
+            calculerIMC();
+        }
+   }, [poids, taille])
+
+    function calculerIMC(){
+        let _IMC = poids / (taille^2);
+        _IMC = _IMC.toFixed(1)
+        setIMC(_IMC);
+    }
 
     function ajouterAge(){
         let _age = age; 
@@ -72,6 +122,35 @@ export default function Demo(){
                     }}
                 />*/
             }
+
+            <Text>Calcul de l'IMC</Text>
+            <Text>Votre taille (en m)</Text>
+
+            <TextInput
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                onChangeText={text => setTaille(text)}
+                value={taille}
+                keyboardType='decimal-pad'
+            />
+
+            <Text>Votre poids (en kg)</Text>
+
+            <TextInput
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                onChangeText={poids => setPoids(poids)}
+                value={poids}
+                keyboardType='decimal-pad'
+            />
+
+            <Button onPress={calculerIMC} title="Calculer l'IMC"/>
+
+            {
+                IMC !== 0 && (
+                    <Text>Votre IMC est de {IMC}</Text>
+                )
+            }
+
+
            
         </View>
     )

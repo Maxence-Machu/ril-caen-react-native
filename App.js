@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, FlatList, ScrollView, Button, Alert, TouchableOpacity } from 'react-native';
 import AppHeader from './components/AppHeader';
 import Copyright from './components/Copyright';
 import ProductItem from './components/ProductItem';
 import ScanButton from './components/ScanButton';
+import Camera from './Pages/Camera';
 import Demo from './Pages/Demo';
+import Liste from './Pages/Liste';
 
 const ITEMS = [
   {
@@ -24,6 +26,8 @@ const ITEMS = [
 ]
 export default function App() {
 
+  const [page, setPage] = useState('LISTE');
+
   function onPressLearnMore() {
     Alert.alert('Bonjour')
   }
@@ -37,42 +41,75 @@ export default function App() {
     alert(`Je clique sur ${item.name}`);
   }
  
-  const renderItem = ({ item }) => {    
-    return (
-      <ProductItem item={item} onPress={onItemPress}/> 
-    )
-  };
 
-  return (
+/*   return (
     <Demo/>
-  )
+  ) */
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      
+      {
+        page === 'LISTE' && (
+          <Liste 
+            items={ITEMS}
+            onPressButton={onPressLearnMore}
+            onPressItem={onItemPress}
+          />
+        )
+      }
+      
+      {
+        page === 'DEMO' && (
+          <Demo/>
+        )
+      }
+      
+      {
+        page === 'CAMERA' && (
+          <Camera/>
+        )
+      }
 
-      <AppHeader title="Accueil" />
 
-      <ScanButton text="Bouton" onPress={onPressLearnMore}/>
+      <SafeAreaView style={sTabs.container}>
+        <TouchableOpacity style={sTabs.tab} onPress={() => {setPage('LISTE')}}>
+          <Text style={sTabs.text}>Liste</Text>
+        </TouchableOpacity>
 
+        <TouchableOpacity style={sTabs.tab} onPress={() => {setPage('CAMERA')}}>
+          <Text style={sTabs.text}>Camera</Text>
+        </TouchableOpacity>
 
-      <FlatList
-        data={ITEMS}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-
-      <Copyright 
-          /* Ne pas oublier les accolades pour du JS comme un tableau */
-          ping={"pong"} 
-          tableauEnProps={[1,2,4,5]}
-          tic={"tac"} 
-          promotion={"RIL CAEN"} />
+        <TouchableOpacity style={sTabs.tab} onPress={() => {setPage('DEMO')}}>
+          <Text style={sTabs.text}>Demo</Text>
+        </TouchableOpacity>
+      </SafeAreaView>  
 
     </View>
   );
 }
 
+const sTabs = StyleSheet.create({
+  container: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
+  },
+  tab: {
+    paddingVertical: 20,
+    borderColor: 'grey',
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    flex: 1
+  },
+  text: {
+    fontSize: 18,
+    textAlign: 'center'
+  }
+})
 
 const sScroll = StyleSheet.create({
   container: {
