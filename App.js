@@ -8,25 +8,23 @@ import ScanButton from './components/ScanButton';
 import Camera from './Pages/Camera';
 import Demo from './Pages/Demo';
 import Liste from './Pages/Liste';
+import ProductModal from './Pages/ProductModal';
 
-const ITEMS = [
-  {
-    id: '1',
-    name: 'Chocapic',
-    date: '21/01/2021'
-  },{
-    id: '2',
-    name: 'CocoPops',
-    date: '22/01/2021'
-  },{
-    id: '3',
-    name: 'Golden Grams',
-    date: '23/01/2021'
-  }
-]
 export default function App() {
 
   const [page, setPage] = useState('LISTE');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
+
+  const [products, setProducts] = useState([{
+    id: '3029330003533',
+    name: 'Produit test',
+    barcode: '3029330003533'
+  },{
+    id: '3017620422003',
+    name: 'Nutella',
+    barcode: '3017620422003'
+  }]);
 
   function onPressLearnMore() {
     Alert.alert('Bonjour')
@@ -38,9 +36,26 @@ export default function App() {
   function onItemPress(item){
     //console.log(item);
     //alert('Je clique sur ' + item.name);
-    alert(`Je clique sur ${item.name}`);
+    setCurrentItem(item);
+    setModalVisible(true);
+    
+    //alert(`Je clique sur ${item.barcode}`);
   }
  
+  const addToList = (product) => {
+      console.log('Add depuis App.js');
+      setProducts([...products, product])
+      setPage('LISTE');
+  }
+
+  const toggleModal = () => {
+    let _vibility = modalVisible;
+    setModalVisible(!_vibility);
+
+    if(modalVisible === true){
+      setCurrentItem(null);
+    }
+  }
 
 /*   return (
     <Demo/>
@@ -49,11 +64,16 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+
+      <ProductModal 
+        item={currentItem}
+        toggle={toggleModal} 
+        visible={modalVisible}/>
       
       {
         page === 'LISTE' && (
           <Liste 
-            items={ITEMS}
+            items={products}
             onPressButton={onPressLearnMore}
             onPressItem={onItemPress}
           />
@@ -68,7 +88,7 @@ export default function App() {
       
       {
         page === 'CAMERA' && (
-          <Camera/>
+          <Camera addToList={addToList}/>
         )
       }
 
